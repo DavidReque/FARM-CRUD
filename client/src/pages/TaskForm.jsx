@@ -50,28 +50,48 @@ function TaskForm() {
 
   return (
     <div className="flex items-center justify-center h-[calc(100vh-10rem)]">
-      <form className="bg-zinc-950 p-10" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Title"
-          className="block py-2 px-3 mb-4 w-full text-black"
-          onChange={(e) => {
-            setTitle(e.target.value);
-          }}
-          value={title}
-          autoFocus
-        />
-        <textarea
-          className="block py-2 px-3 mb-4 w-full text-black"
-          rows="3"
-          placeholder="Description"
-          value={description}
-          onChange={(e) => {
-            setDescription(e.target.value);
-          }}
-        ></textarea>
-        <button>{params.id ? "Update task" : "Create Task"}</button>
-      </form>
+      <div>
+        <form className="bg-zinc-950 p-10" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Title"
+            className="block py-2 px-3 mb-4 w-full text-black"
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+            value={title}
+            autoFocus
+          />
+          <textarea
+            className="block py-2 px-3 mb-4 w-full text-black"
+            rows="3"
+            placeholder="Description"
+            value={description}
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
+          ></textarea>
+          <button>{params.id ? "Update task" : "Create Task"}</button>
+        </form>
+
+        {params.id && (
+          <button
+            onClick={async () => {
+              try {
+                const res = await axios.delete(
+                  `http://127.0.0.1:8000/api/tasks/${params.id}`
+                );
+                navigate("/");
+              } catch (error) {
+                console.log(error);
+              }
+            }}
+            className="bg-red-500 hover:bg-red-400 text-white font-bold py-2 rounded mt-5 px-4"
+          >
+            Delete
+          </button>
+        )}
+      </div>
     </div>
   );
 }
