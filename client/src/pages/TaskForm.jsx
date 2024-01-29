@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { fetchTask, createTask, updateTask, deleteTask } from "../api/task";
 
 function TaskForm() {
   const [title, setTitle] = useState("");
@@ -13,18 +13,9 @@ function TaskForm() {
 
     try {
       if (!params.id) {
-        const res = await axios.post("http://127.0.0.1:8000/api/tasks", {
-          title,
-          description,
-        });
+        const res = await createTask({ title, description });
       } else {
-        const res = await axios.put(
-          `http://127.0.0.1:8000/api/tasks/${params.id}`,
-          {
-            title,
-            description,
-          }
-        );
+        const res = await updateTask(params.id, { title, description });
       }
 
       e.target.reset();
@@ -36,15 +27,12 @@ function TaskForm() {
 
   useEffect(() => {
     if (params.id) {
-      fetchTask();
-    }
-
-    async function fetchTask() {
-      const res = await axios.get(
-        `http://127.0.0.1:8000/api/tasks/${params.id}`
-      );
-      setTitle(res.data.title);
-      setDescription(res.data.description);
+      fetchTask(params.id)
+        .then((res) => {
+          setTitle(res.data.title);
+          setDescription(res.data.description);
+        })
+        .catch((err) => console.log(err));
     }
   }, []);
 
@@ -83,9 +71,7 @@ function TaskForm() {
           <button
             onClick={async () => {
               try {
-                const res = await axios.delete(
-                  `http://127.0.0.1:8000/api/tasks/${params.id}`
-                );
+                await deleteTask(params.id);
                 navigate("/");
               } catch (error) {
                 console.log(error);
