@@ -52,6 +52,9 @@ function TaskForm() {
     <div className="flex items-center justify-center h-[calc(100vh-10rem)]">
       <div>
         <form className="bg-zinc-950 p-10" onSubmit={handleSubmit}>
+          <h1 className="text-3xl font-bold my-4">
+            {params.id ? "Update Task" : "Create Task"}
+          </h1>
           <input
             type="text"
             placeholder="Title"
@@ -71,7 +74,9 @@ function TaskForm() {
               setDescription(e.target.value);
             }}
           ></textarea>
-          <button>{params.id ? "Update task" : "Create Task"}</button>
+          <button className="bg-white hover:bg-slate-800 hover:text-white text-slate-800 font-bold py-2 px-4 rounded">
+            {params.id ? "Update task" : "Create Task"}
+          </button>
         </form>
 
         {params.id && (
